@@ -219,7 +219,7 @@ biohub/
 └── .gitignore
 ```
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 * **Python**
 * **Typer** – CLI
