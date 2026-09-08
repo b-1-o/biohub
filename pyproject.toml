@@ -27,3 +27,4 @@ dependencies = [
 [project.scripts]
 hub = "hub.cli:app"
 hub-desktop = "hub.desktop:main"
+biohub = "hub.desktop:main"
