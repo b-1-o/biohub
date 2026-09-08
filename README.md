@@ -1,70 +1,93 @@
-# BioHub – Personal Command Center
+# BioHub
 
-**BioHub** is a lightweight personal command center for Linux designed to launch your everyday workflows from one place.
+**A lightweight personal command center for Linux.**
 
-It combines a **terminal CLI**, a **web dashboard**, and a **desktop GUI** into a customizable workspace inspired by the simplicity of a Stream Deck.
+BioHub brings your everyday applications, websites, and workflows into one customizable command center — available through the **terminal**, **web dashboard**, and **desktop GUI**.
+
+<p align="center">
+
+**One command. One click. One workflow.**
+
+</p>
+
+---
 
 ##  Features
 
-*  **Launch workflows from the terminal**
-*  **Web dashboard** with interactive command buttons
 *  **Desktop GUI** for launching workflows
-*  **Create and edit commands** directly from the web interface
-*  **Open multiple URLs** in your preferred browser
-*  **Launch desktop applications**
-*  **Custom icons and colors** for commands
-*  **Upload custom PNG icons**
-*  **YAML-based configuration**
-*  **Combine multiple actions into a single workflow**
-*  **Linux-focused and lightweight**
-*  **Designed to be easily customizable and extensible**
+*  **Web dashboard** with interactive controls
+*  **Terminal CLI** for fast workflow execution
+*  Launch multiple applications with one action
+*  Open multiple websites in your preferred browser
+*  Combine different actions into a single workflow
+*  Custom icons, colors, and descriptions
+*  Upload custom PNG icons
+*  YAML-based configuration
+*  Built specifically for Linux
+*  Lightweight and customizable
+*  Simple one-command installation
 
-##  How It Works
+---
 
-A BioHub command is a collection of actions.
+##  Quick Install
 
-For example, one button can:
+BioHub can be installed without cloning the repository or manually creating a Python environment.
 
-1. Launch Zed
-2. Open GitHub
-3. Open your school website
-4. Open ChatGPT
-5. Start another application
+### Install
 
-Instead of running each command manually, you can create a single workflow and launch everything with one click.
-
-### Example
-
-```yaml
-commands:
-  coding:
-    description: "Open my coding environment"
-    actions:
-      - type: app
-        command: zed
-
-      - type: browser
-        urls:
-          - https://github.com
-          - https://chatgpt.com
-        browser: brave
-
-    icon_type: emoji
-    icon_value: "💻"
-    color: "#10b981"
+```bash
+curl -fsSL https://raw.githubusercontent.com/b-1-o/biohub/main/install.sh | bash
 ```
+
+After installation, launch BioHub from your application menu or run:
+
+```bash
+biohub
+```
+
+The installer creates:
+
+* an isolated Python virtual environment
+* the `biohub` command
+* the `hub` CLI command
+* the `hub-desktop` command
+* a desktop application entry
+
+### Requirements
+
+* Linux
+* Python **3.10+**
+* `curl`
+
+No Git installation is required for the quick installer.
+
+---
+
+##  Uninstall
+
+To remove BioHub:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/b-1-o/biohub/main/uninstall.sh | bash
+```
+
+The uninstaller removes the BioHub installation, launchers, and desktop entry.
+
+---
 
 ##  Interfaces
 
+BioHub provides three ways to interact with your workflows.
+
 ### Terminal
 
-Use BioHub directly from the command line:
+Use the CLI directly:
 
 ```bash
+hub init
 hub list
 hub run coding
 hub edit
-hub init
 ```
 
 ### Web Dashboard
@@ -81,113 +104,101 @@ Then open:
 http://127.0.0.1:8765
 ```
 
-The dashboard provides an interactive interface for launching, creating, editing, and deleting workflows.
+The dashboard allows you to create, edit, launch, and manage workflows from your browser.
 
-### Desktop GUI
+### Desktop
 
-BioHub also provides a desktop entry point:
+Launch the desktop application:
 
 ```bash
 hub-desktop
 ```
 
-##  Installation
+You can also launch **BioHub** directly from your desktop application's menu after installation.
 
-### Requirements
+---
 
-* Linux
-* Python 3.10+
-* pip
-* Git
+## ⚡ Workflows
 
-### Install from source
+The main idea behind BioHub is simple:
 
-```bash
-git clone https://github.com/b-1-o/biohub.git
-cd biohub
+> **Turn repetitive computer workflows into one-click actions.**
 
-python -m venv .venv
-source .venv/bin/activate
+A workflow can contain multiple actions.
 
-pip install -e .
+For example, a single `coding` workflow could:
+
+1. Launch your code editor
+2. Open GitHub
+3. Open ChatGPT
+4. Open your documentation
+5. Start another application
+
+Instead of repeating these actions manually every day, BioHub lets you define them once and launch them together.
+
+### Example
+
+```yaml
+commands:
+  coding:
+    description: "Open my coding environment"
+
+    actions:
+      - type: app
+        command: zed
+
+      - type: browser
+        urls:
+          - https://github.com
+          - https://chatgpt.com
+        browser: brave
+
+    icon_type: emoji
+    icon_value: "💻"
+    color: "#10b981"
 ```
 
-Initialize the default configuration:
-
-```bash
-hub init
-```
-
-Your configuration will be created at:
-
-```text
-~/.config/hub/config.yaml
-```
-
-##  Quick Start
-
-After installation:
-
-```bash
-hub init
-```
-
-View your available workflows:
-
-```bash
-hub list
-```
-
-Run a workflow:
+Then run:
 
 ```bash
 hub run coding
 ```
 
-Edit your configuration:
+---
 
-```bash
-hub edit
-```
+##  Browser Actions
 
-Start the web dashboard:
-
-```bash
-hub ui
-```
-
-Or launch the desktop application:
-
-```bash
-hub-desktop
-```
-
-##  Actions
-
-BioHub workflows can combine different types of actions.
-
-### Open applications
-
-```yaml
-- type: app
-  command: zed
-```
-
-### Open websites
+BioHub can open multiple URLs as part of one workflow.
 
 ```yaml
 - type: browser
   urls:
     - https://github.com
     - https://chatgpt.com
+    - https://example.com
   browser: brave
 ```
 
-Multiple actions can be combined into a single workflow.
+This makes it possible to create workflows for development, school, work, gaming, research, or any other repetitive setup.
+
+---
+
+##  Application Actions
+
+Launch desktop applications directly from a workflow:
+
+```yaml
+- type: app
+  command: zed
+```
+
+You can combine application actions with browser actions and other supported actions.
+
+---
 
 ##  Customization
 
-Each command can have its own:
+Each workflow can have its own:
 
 * Name
 * Description
@@ -196,9 +207,57 @@ Each command can have its own:
 * Color
 * Actions
 
-BioHub also supports uploading custom PNG icons through the web interface.
+BioHub also supports custom PNG icons through the web dashboard.
 
-This makes it possible to build a personalized dashboard around your own workflow.
+This allows you to build a command center around the applications and workflows you actually use.
+
+---
+
+##  Configuration
+
+BioHub uses YAML for configuration.
+
+The default configuration is stored in:
+
+```text
+~/.config/hub/config.yaml
+```
+
+Initialize it with:
+
+```bash
+hub init
+```
+
+Edit it with:
+
+```bash
+hub edit
+```
+
+---
+
+##  Manual Installation
+
+If you prefer installing BioHub directly from source:
+
+```bash
+git clone https://github.com/b-1-o/biohub.git
+cd biohub
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+pip install -e .
+```
+
+Then initialize BioHub:
+
+```bash
+hub init
+```
+
+---
 
 ##  Project Structure
 
@@ -211,38 +270,56 @@ biohub/
 │   ├── executor.py
 │   ├── models.py
 │   ├── web.py
+│   ├── static/
 │   └── templates/
 │       └── dashboard.html
 │
+├── install.sh
+├── uninstall.sh
 ├── pyproject.toml
 ├── README.md
 └── .gitignore
 ```
 
+---
+
 ##  Tech Stack
 
-* **Python**
-* **Typer** – CLI
-* **FastAPI** – Web API
-* **Uvicorn** – ASGI server
-* **Jinja2** – Web templates
-* **PyYAML** – Configuration
-* **Pydantic** – Data validation
-* **Rich** – Terminal UI
-* **PySide6** – Desktop GUI
+| Technology | Purpose            |
+| ---------- | ------------------ |
+| Python     | Core application   |
+| Typer      | Terminal CLI       |
+| FastAPI    | Web backend        |
+| Uvicorn    | ASGI server        |
+| Jinja2     | Web templates      |
+| PyYAML     | Configuration      |
+| Pydantic   | Data validation    |
+| Rich       | Terminal interface |
+| PySide6    | Desktop GUI        |
 
-##  Philosophy
+---
 
-BioHub is built around a simple idea:
+## 🐧 Linux First
 
-> **Turn repetitive computer workflows into one-click actions.**
+BioHub is designed primarily for Linux desktops.
 
-Instead of remembering commands, opening applications one by one, and navigating through the same websites every day, BioHub lets you define a workflow once and launch it whenever you need it.
+The project focuses on integrating with the Linux desktop environment while keeping the application lightweight and easy to customize.
+
+---
 
 ##  Roadmap
 
-Planned improvements may include:
-
+* [x] Terminal CLI
+* [x] Web dashboard
+* [x] Desktop GUI
+* [x] YAML configuration
+* [x] Workflow execution
+* [x] Browser actions
+* [x] Application actions
+* [x] Custom icons
+* [x] Linux installer
+* [x] Linux uninstaller
+* [ ] Custom BioHub application icon
 * [ ] Drag-and-drop dashboard customization
 * [ ] Command categories and folders
 * [ ] Keyboard shortcuts
@@ -250,9 +327,18 @@ Planned improvements may include:
 * [ ] More action types
 * [ ] Workflow import/export
 * [ ] Theme customization
-* [ ] Better desktop integration
 * [ ] Plugin system
 * [ ] Cross-platform support
+
+---
+
+##  Contributing
+
+Contributions, ideas, bug reports, and improvements are welcome.
+
+If you find a problem or have an idea for BioHub, feel free to open an issue or submit a pull request.
+
+---
 
 ##  License
 
@@ -260,10 +346,10 @@ BioHub is released under the **MIT License**.
 
 ---
 
-###  Why BioHub?
+##  Philosophy
 
-BioHub is not intended to replace your terminal or desktop environment.
+BioHub is not designed to replace your terminal or desktop environment.
 
-It sits on top of them and provides a convenient visual layer for the commands and workflows you use most often.
+It sits on top of them and gives you a convenient visual layer for the commands, applications, websites, and workflows you use most often.
 
 **Your commands. Your workflow. Your command center.**
