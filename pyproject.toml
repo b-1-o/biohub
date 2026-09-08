@@ -3,7 +3,7 @@ requires = ["setuptools>=77.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "hub"
+name = "biohub"
 version = "0.3.0"
 description = "A lightweight personal command center for Linux"
 readme = "README.md"
