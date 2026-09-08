@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=BioHub
+Comment=Personal Command Center
+Exec=biohub
+Terminal=false
+Type=Application
+Categories=Utility;
+StartupNotify=true
