@@ -135,19 +135,23 @@ def copy_icon_to_hub(source: str) -> str:
         raise ValueError("Unsupported image format.")
     target = ICONS_DIR / f"{uuid.uuid4().hex}{extension}"
     shutil.copy2(source_path, target)
-    return str(target)
+    return target.name
 
 
 def remove_old_icon(path: str | None):
     if not path:
         return
+
     try:
-        p = Path(path)
-        if p.exists() and ICONS_DIR in p.parents:
+        p = Path(path).expanduser()
+
+        if not p.is_absolute():
+            p = ICONS_DIR / p
+
+        if p.exists() and p.parent == ICONS_DIR:
             p.unlink()
     except OSError:
         pass
-
 
 def get_image_path(icon: str | None) -> Path | None:
     if not icon:
@@ -365,8 +369,6 @@ def _hyprland_move_window(addr: str, monitor: str):
     if not addr or not monitor:
         return
 
-    print(f"[HUB] move {addr} → {monitor}", flush=True)
-
     # Hyprland 0.55+ Lua API
     cmds = [
         f'hl.dsp.window.move({{ monitor = "{monitor}", window = "address:{addr}" }})',
@@ -387,7 +389,6 @@ def _hyprland_move_window(addr: str, monitor: str):
         )
         out = (r.stdout or "").strip()
         err = (r.stderr or "").strip()
-        print(f"[HUB] hyprctl: {cmd!r} → out={out!r} err={err!r}", flush=True)
         time.sleep(0.04)
 
 
@@ -419,8 +420,6 @@ def place_new_windows_on_monitor(
         deadline = time.monotonic() + timeout
         moved = set()
 
-        print(f"[HUB] place: monitor={monitor} hint={app_hint}", flush=True)
-
         while time.monotonic() < deadline:
             try:
                 if compositor != "hyprland":
@@ -437,7 +436,6 @@ def place_new_windows_on_monitor(
                         continue
                     if app_hint and not _matches(client, app_hint):
                         continue
-                    print(f"[HUB] move match class={client.get('class')} → {monitor}", flush=True)
                     _hyprland_move_window(addr, monitor)
                     moved.add(addr)
 
@@ -445,7 +443,7 @@ def place_new_windows_on_monitor(
                     time.sleep(0.3)
                     continue
             except Exception as e:
-                print(f"[HUB] place error: {e}", flush=True)
+                print(f"Failed to place window: {e}", flush=True)
             time.sleep(0.15)
 
         if not moved and app_hint and compositor == "hyprland":
@@ -453,11 +451,10 @@ def place_new_windows_on_monitor(
                 clients = _hyprland_clients()
                 for client in clients:
                     if _matches(client, app_hint) and client.get("address"):
-                        print(f"[HUB] fallback move class={client.get('class')} → {monitor}", flush=True)
                         _hyprland_move_window(client["address"], monitor)
                         break
             except Exception as e:
-                print(f"[HUB] fallback error: {e}", flush=True)
+                print(f"Failed to move fallback window: {e}", flush=True)
 
     threading.Thread(target=worker, daemon=True).start()
 
@@ -2054,11 +2051,10 @@ class HubWindow(QWidget):
         self.refresh_commands()
 
     # --------------------------------------------------------
-    # Execute  <<<--- ГЛАВНЫЙ ФИКС ЗДЕСЬ
+    # Execute
     # --------------------------------------------------------
 
     def run_command(self, name):
-        print(f"[HUB] clicked: {name}", flush=True)
         config = load_config()
         command = config.get("commands", {}).get(name)
         if not command:
@@ -2078,7 +2074,6 @@ class HubWindow(QWidget):
                     urls = action.get("urls") or []
                     parts = [browser, "--new-window", *urls]
                     app_hint = browser
-                    print(f"[HUB] browser launch: {parts} → monitor={monitor or 'current'}", flush=True)
                     subprocess.Popen(parts, start_new_session=True)
                 else:
                     raw = (action.get("command") or "").strip()
@@ -2089,10 +2084,9 @@ class HubWindow(QWidget):
                     except ValueError:
                         parts = [raw]
                     app_hint = parts[0] if parts else None
-                    print(f"[HUB] app launch: {parts} → monitor={monitor or 'current'}", flush=True)
                     execute_action(action)
             except Exception as e:
-                print(f"[HUB] ERROR: {e}", flush=True)
+                print(f"Failed to execute action: {e}", flush=True)
                 import traceback
                 traceback.print_exc()
 
