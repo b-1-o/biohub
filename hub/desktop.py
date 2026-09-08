@@ -2282,7 +2282,6 @@ def main():
 
     app = QApplication(sys.argv)
     app.setDesktopFileName("biohub")
-    app.setDesktopFileName("hub")
     app.setApplicationName("Hub")
     app.setApplicationDisplayName("Hub")
     app.setStyle("Fusion")
