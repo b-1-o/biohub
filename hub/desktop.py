@@ -56,6 +56,36 @@ from PySide6.QtWidgets import (
 from .config import load_config, save_config
 from .executor import execute_action
 
+# ============================================================
+# Desktop entry creation
+# ============================================================
+
+DESKTOP_DIR = Path.home() / ".local" / "share" / "applications"
+DESKTOP_FILE = DESKTOP_DIR / "biohub.desktop"
+
+def ensure_desktop_entry():
+    """Create a .desktop file for BioHub if it doesn't exist."""
+    if DESKTOP_FILE.exists():
+        return
+
+    DESKTOP_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Используем 'biohub' – команда, которая появится после установки
+    content = f"""\
+[Desktop Entry]
+Type=Application
+Name=BioHub
+Comment=Personal command center
+Exec=biohub %F
+Icon=applications-utilities
+Terminal=false
+Categories=Utility;
+StartupNotify=true
+"""
+    DESKTOP_FILE.write_text(content, encoding="utf-8")
+    # Сделаем исполняемым (опционально)
+    DESKTOP_FILE.chmod(0o644)
+
 
 # ============================================================
 # Paths
@@ -2248,6 +2278,7 @@ def _toggle_running_instance() -> bool:
 
 def main():
     ensure_dirs()
+    ensure_desktop_entry()
 
     app = QApplication(sys.argv)
     app.setDesktopFileName("hub")
