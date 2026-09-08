@@ -39,10 +39,10 @@ BioHub can be installed without cloning the repository or manually creating a Py
 curl -fsSL https://raw.githubusercontent.com/b-1-o/biohub/main/install.sh | bash
 ```
 
-After installation, launch BioHub from your application menu or run:
+After installation, update desktop database and run:
 
 ```bash
-biohub
+update-desktop-database ~/.local/share/applications
 ```
 
 The installer creates:
