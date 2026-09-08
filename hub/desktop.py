@@ -2281,6 +2281,7 @@ def main():
     ensure_desktop_entry()
 
     app = QApplication(sys.argv)
+    app.setDesktopFileName("biohub")
     app.setDesktopFileName("hub")
     app.setApplicationName("Hub")
     app.setApplicationDisplayName("Hub")
